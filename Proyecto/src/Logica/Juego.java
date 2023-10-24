@@ -6,6 +6,7 @@ import Entidades.Dulce;
 import Grafica.GUI;
 
 import Hilos.Controlador;
+import Hilos.TimerCaida;
 
 import java.util.List;
 import java.util.Random;
@@ -27,6 +28,7 @@ public class Juego {
 	protected Reloj timer;
 	protected boolean juego_finalizado;
 	protected Chequear check;
+	protected TimerCaida caida;
 	protected int nivel;
 
 	//Constructor
@@ -46,6 +48,11 @@ public class Juego {
 			Thread hilo_controlador = new Thread(controlador);
 			hilo_controlador.start();
 			check = new Chequear(this);
+			
+			caida = new TimerCaida(this);
+			Thread hilo_caida = new Thread(caida);
+			hilo_caida.start();
+			
 		 
 	 }
 	
@@ -160,7 +167,7 @@ public class Juego {
 
 	}
 	
-	public void chequearCaidos(){
+	public synchronized void chequearCaidos(){
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 6; j++) {
 				int pos[] = {i,j};
